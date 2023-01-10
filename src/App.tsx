@@ -1,6 +1,14 @@
+import { useState } from "react";
 import styled from "styled-components";
+import { RecommandSearch } from "./components/RecommandSearch";
 
 function App() {
+  const [isFocus, setIsFocus] = useState<boolean>(true);
+
+  const focusHandler = (type: string) => {
+    type === "focus" ? setIsFocus(true) : setIsFocus(false);
+  };
+
   return (
     <SearchBox>
       <h2>
@@ -8,18 +16,28 @@ function App() {
         <br />
         온라인으로 참여하기
       </h2>
-      <InputBox>
-        <SearchArea>
-          <SearchInput type="text" placeholder="질환명을 입력해주세요" />
-          <CancelBtn
-            src={require("../src/images/cancel.png")}
-            alt="검색 초기화"
-          />
-          <SearchBtn>
-            <img src={require("../src/images/searchWhite.png")} alt="검색" />
-          </SearchBtn>
-        </SearchArea>
-      </InputBox>
+      <InputWrap>
+        <InputBox
+          style={isFocus ? { border: "2px solid #007BE9" } : { border: "none" }}
+        >
+          <SearchArea>
+            <SearchInput
+              onFocus={() => focusHandler("focus")}
+              onBlur={() => focusHandler("blur")}
+              type="text"
+              placeholder="질환명을 입력해주세요"
+            />
+            <CancelBtn
+              src={require("../src/images/cancel.png")}
+              alt="검색 초기화"
+            />
+            <SearchBtn>
+              <img src={require("../src/images/searchWhite.png")} alt="검색" />
+            </SearchBtn>
+          </SearchArea>
+        </InputBox>
+      </InputWrap>
+      <RecommandSearch isFocus={isFocus} />
     </SearchBox>
   );
 }
@@ -40,6 +58,10 @@ const SearchBox = styled.div`
   }
 `;
 
+const InputWrap = styled.div`
+  height: 90px;
+`;
+
 const InputBox = styled.div`
   display: flex;
   align-items: center;
@@ -57,7 +79,7 @@ const SearchArea = styled.div`
 `;
 
 const SearchInput = styled.input`
-  padding-top: 6px;
+  padding-top: 4px;
   padding-right: 25px;
   width: 350px;
   height: 22px;
@@ -72,6 +94,7 @@ const CancelBtn = styled.img`
   width: 18px;
   height: 18px;
   margin-right: 10px;
+  cursor: pointer;
 `;
 
 const SearchBtn = styled.button`
@@ -80,6 +103,7 @@ const SearchBtn = styled.button`
   border: none;
   border-radius: 50%;
   background-color: #007be9;
+  cursor: pointer;
 
   & img {
     width: 30px;
