@@ -4,9 +4,14 @@ import { RecommandSearch } from "./components/RecommandSearch";
 
 function App() {
   const [isFocus, setIsFocus] = useState<boolean>(true);
+  const [searchWord, setSearchWord] = useState<string>("");
 
   const focusHandler = (type: string) => {
     type === "focus" ? setIsFocus(true) : setIsFocus(false);
+  };
+
+  const focusOn = () => {
+    document.getElementById("searchInput")?.focus();
   };
 
   return (
@@ -22,12 +27,29 @@ function App() {
         >
           <SearchArea>
             <SearchInput
+              onChange={(e) => setSearchWord(e.target.value)}
               onFocus={() => focusHandler("focus")}
               onBlur={() => focusHandler("blur")}
+              id="searchInput"
               type="text"
-              placeholder="질환명을 입력해주세요"
+              value={searchWord}
             />
+            <SearchPlaceHolder
+              onClick={focusOn}
+              style={
+                isFocus || searchWord.length > 0
+                  ? { display: "none" }
+                  : { display: "flex" }
+              }
+            >
+              <img
+                src={require("../src/images/searchGray.png")}
+                alt="placeholder"
+              />
+              질환명을 입력해주세요
+            </SearchPlaceHolder>
             <CancelBtn
+              onClick={() => setSearchWord("")}
               src={require("../src/images/cancel.png")}
               alt="검색 초기화"
             />
@@ -37,7 +59,7 @@ function App() {
           </SearchArea>
         </InputBox>
       </InputWrap>
-      <RecommandSearch isFocus={isFocus} />
+      <RecommandSearch isFocus={isFocus} searchWord={searchWord} />
     </SearchBox>
   );
 }
@@ -87,6 +109,19 @@ const SearchInput = styled.input`
   border: none;
   &:focus {
     outline: none;
+  }
+`;
+
+const SearchPlaceHolder = styled.div`
+  position: absolute;
+
+  display: flex;
+  align-items: center;
+  color: gray;
+  & img {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
   }
 `;
 

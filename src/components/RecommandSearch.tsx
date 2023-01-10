@@ -1,6 +1,24 @@
+import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { searchAPI } from "../api/api";
 
-export const RecommandSearch = ({ isFocus }: { isFocus: boolean }) => {
+interface childProps {
+  isFocus: boolean;
+  searchWord: string;
+}
+
+export const RecommandSearch = ({ isFocus, searchWord }: childProps) => {
+  const [recommandWord, setRecommandWord] = useState();
+
+  const fetchSick = async () => {
+    const data = await searchAPI.getSearch(searchWord).then((res) => {
+      console.log(res);
+    });
+  };
+  useEffect(() => {
+    fetchSick();
+  }, [searchWord]);
+
   return (
     <>
       {isFocus ? (

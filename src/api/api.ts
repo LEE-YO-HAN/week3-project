@@ -5,5 +5,5 @@ export const base = axios.create({
 });
 
 export const searchAPI = {
-  getSearch: (param: string) => base.get(`sick?q=${param}`),
+  getSearch: (param: string) => base.get(`/sick?q=${param}`),
 };
