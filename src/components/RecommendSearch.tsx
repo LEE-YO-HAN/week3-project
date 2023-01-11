@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 import { searchAPI } from "../api/api";
 import { RegExp } from "../util/RegExp";
 import { KeyLIEvent } from "./type/type";
@@ -24,7 +24,7 @@ export const RecommendSearch = ({
   keyInUse,
 }: childProps) => {
   const [recommendWord, setRecommendWord] = useState<Array<any>>([]);
-  const [countAxios, setCountAxios] = useState(0);
+  const [countAxios, setCountAxios] = useState<number>(0);
 
   // 과제 요구사항 콘솔
   console.info("axios#############", countAxios);
@@ -33,6 +33,7 @@ export const RecommendSearch = ({
   const fetchSick = async (param: string) => {
     const { data } = await searchAPI.getSearch(param);
     setRecommendWord(data);
+    // 과제 요구사항용 state
     setCountAxios((prev) => prev + 1);
   };
 
@@ -86,7 +87,6 @@ export const RecommendSearch = ({
     index: number,
     listLength: number
   ) => {
-    console.log(e);
     document.getElementById(`searchList${index}`)?.blur();
     if (e.code === "ArrowDown") {
       if (index === listLength - 1) {
@@ -130,7 +130,7 @@ export const RecommendSearch = ({
                         <ListItemWrap>
                           <img
                             src={require("../images/searchGray.png")}
-                            alt=""
+                            alt="돋보기 이미지"
                           />
                           <span>{item}</span>
                         </ListItemWrap>
@@ -173,7 +173,7 @@ export const RecommendSearch = ({
                         <ListItemWrap>
                           <img
                             src={require("../images/searchGray.png")}
-                            alt=""
+                            alt="돋보기 이미지"
                           />
                           {item.sickNm?.split(searchWord)[0]}
                           <ItemBold>{searchWord}</ItemBold>
