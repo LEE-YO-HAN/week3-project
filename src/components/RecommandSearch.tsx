@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { searchAPI } from "../api/api";
 import { RegExp } from "../util/RegExp";
-import { FocusLIEvent } from "./type/type";
+import { KeyLIEvent } from "./type/type";
 
 interface childProps {
   isFocus: boolean;
@@ -29,6 +29,7 @@ export const RecommendSearch = ({
   // 과제 요구사항 콘솔
   console.info("axios#############", countAxios);
 
+  // valid && fetch
   const fetchSick = async (param: string) => {
     const { data } = await searchAPI.getSearch(param);
     setRecommendWord(data);
@@ -47,6 +48,7 @@ export const RecommendSearch = ({
     if (searchWord?.length === 0) setRecommendWord([]);
   }, [searchWord, keyInUse]);
 
+  // delete recent list
   const deleteSearchedWord = (value: string) => {
     let newLocalData = localStorageData?.filter((item: any) => item !== value);
     localStorage.setItem("searched", `${newLocalData}`);
@@ -65,7 +67,6 @@ export const RecommendSearch = ({
       let searchInputId = document.getElementById("searchInput");
       searchInputId?.focus();
     }
-    console.log(e);
   };
 
   useEffect(() => {
@@ -78,6 +79,29 @@ export const RecommendSearch = ({
       );
     };
   }, [focusItem]);
+
+  // tabIndex ArrowKey contral
+  const focusContralArrow = (
+    e: KeyLIEvent,
+    index: number,
+    listLength: number
+  ) => {
+    console.log(e);
+    document.getElementById(`searchList${index}`)?.blur();
+    if (e.code === "ArrowDown") {
+      if (index === listLength - 1) {
+        document.getElementById(`searchList${0}`)?.focus();
+      } else {
+        document.getElementById(`searchList${index + 1}`)?.focus();
+      }
+    } else if (e.code === "ArrowUp") {
+      if (index === 0) {
+        document.getElementById(`searchList${listLength - 1}`)?.focus();
+      } else {
+        document.getElementById(`searchList${index - 1}`)?.focus();
+      }
+    }
+  };
 
   return (
     <>
@@ -97,12 +121,15 @@ export const RecommendSearch = ({
                   return (
                     <li
                       key={index}
-                      id="searchList"
+                      id={`searchList${index}`}
                       tabIndex={0}
                       onClick={() => {
                         setSearchWord(item);
                         focusHandler("blur");
                       }}
+                      onKeyDown={(e) =>
+                        focusContralArrow(e, index, localStorageData?.length)
+                      }
                       onFocus={() => setFocusItem(item)}
                     >
                       <ListItemWrap>
@@ -139,12 +166,15 @@ export const RecommendSearch = ({
                   return (
                     <li
                       key={index}
-                      id="searchList"
+                      id={`searchList${index}`}
                       tabIndex={0}
                       onClick={() => {
                         setSearchWord(item.sickNm);
                         focusHandler("blur");
                       }}
+                      onKeyDown={(e) =>
+                        focusContralArrow(e, index, recommendWord?.length)
+                      }
                       onFocus={() => setFocusItem(item.sickNm)}
                     >
                       <ListItemWrap>

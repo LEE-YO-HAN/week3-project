@@ -47,8 +47,13 @@ function App() {
           setKeyInUse(false);
         }, 500);
       }
+    } else if (type === "down") {
+      setKeyInUse(true);
     }
-    setKeyInUse(true);
+    // tabIndex ArrowKey contral start
+    if (e.key === "ArrowDown") {
+      document.getElementById("searchList0")?.focus();
+    }
   };
 
   return (
