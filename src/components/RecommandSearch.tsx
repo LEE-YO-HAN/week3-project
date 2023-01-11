@@ -21,7 +21,7 @@ export const RecommendSearch = ({
   setlocalStorageData,
   keyInUse,
 }: childProps) => {
-  const [recommendWord, setRecommendWord] = useState<Array<any>>([""]);
+  const [recommendWord, setRecommendWord] = useState<Array<any>>([]);
   const [countAxios, setCountAxios] = useState(0);
 
   // 과제 요구사항 콘솔
@@ -45,6 +45,7 @@ export const RecommendSearch = ({
     ) {
       fetchSick(searchWord);
     }
+    if (searchWord.length === 0) setRecommendWord([]);
   }, [searchWord, keyInUse]);
 
   const deleteSearchedWord = (value: string) => {
