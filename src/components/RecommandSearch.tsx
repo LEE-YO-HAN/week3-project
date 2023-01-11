@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { searchAPI } from "../api/api";
 import { RegExp } from "../util/RegExp";
+import { FocusLIEvent } from "./type/type";
 
 interface childProps {
   isFocus: boolean;
@@ -36,14 +37,14 @@ export const RecommendSearch = ({
 
   useEffect(() => {
     if (
-      searchWord.length > 0 &&
+      searchWord?.length > 0 &&
       !RegExp.blankPattern(searchWord) && // not only blank
       !RegExp.pattern(searchWord) && // not each String
       keyInUse === false
     ) {
       fetchSick(searchWord);
     }
-    if (searchWord.length === 0) setRecommendWord([]);
+    if (searchWord?.length === 0) setRecommendWord([]);
   }, [searchWord, keyInUse]);
 
   const deleteSearchedWord = (value: string) => {
@@ -52,13 +53,39 @@ export const RecommendSearch = ({
     setlocalStorageData(newLocalData);
   };
 
+  // tabIndex logic
+  const [focusItem, setFocusItem] = useState<string>("");
+  console.log(focusItem);
+
+  const focusListSearch = (e: KeyboardEvent, focusItem: string) => {
+    if (e.code === "Enter") {
+      setSearchWord(focusItem);
+      let searchListId = document.getElementById("#searchList");
+      searchListId?.blur();
+      let searchInputId = document.getElementById("searchInput");
+      searchInputId?.focus();
+    }
+    console.log(e);
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", (e: KeyboardEvent) =>
+      focusListSearch(e, focusItem)
+    );
+    return () => {
+      document.removeEventListener("keydown", (e: KeyboardEvent) =>
+        focusListSearch(e, focusItem)
+      );
+    };
+  }, [focusItem]);
+
   return (
     <>
       {isFocus ? (
         <Container onClick={(e) => e.stopPropagation()}>
           <CardBox
             style={
-              searchWord.length !== 0
+              searchWord?.length !== 0
                 ? { display: "none" }
                 : { display: "block" }
             }
@@ -66,14 +93,17 @@ export const RecommendSearch = ({
             <SearchCate>최근 검색어</SearchCate>
             <RecommendList>
               {localStorageData && localStorageData !== undefined ? (
-                localStorageData?.map((item: any, index: number) => {
+                localStorageData?.map((item: string, index: number) => {
                   return (
                     <li
                       key={index}
+                      id="searchList"
+                      tabIndex={0}
                       onClick={() => {
                         setSearchWord(item);
                         focusHandler("blur");
                       }}
+                      onFocus={() => setFocusItem(item)}
                     >
                       <ListItemWrap>
                         <img src={require("../images/searchGray.png")} alt="" />
@@ -81,8 +111,8 @@ export const RecommendSearch = ({
                       </ListItemWrap>
                       <CancelBtn
                         onClick={(e) => {
-                          deleteSearchedWord(item);
                           e.stopPropagation();
+                          deleteSearchedWord(item);
                         }}
                         src={require("../images/cancel.png")}
                         alt="최근 검색어 삭제"
@@ -97,7 +127,9 @@ export const RecommendSearch = ({
           </CardBox>
           <CardBox
             style={
-              searchWord.length > 0 ? { display: "block" } : { display: "none" }
+              searchWord?.length > 0
+                ? { display: "block" }
+                : { display: "none" }
             }
           >
             <SearchCate>추천 검색어</SearchCate>
@@ -107,10 +139,13 @@ export const RecommendSearch = ({
                   return (
                     <li
                       key={index}
+                      id="searchList"
+                      tabIndex={0}
                       onClick={() => {
                         setSearchWord(item.sickNm);
                         focusHandler("blur");
                       }}
+                      onFocus={() => setFocusItem(item.sickNm)}
                     >
                       <ListItemWrap>
                         <img src={require("../images/searchGray.png")} alt="" />
@@ -135,7 +170,6 @@ export const RecommendSearch = ({
 const Container = styled.div`
   position: absolute;
   top: 350px;
-
   width: 490px;
   background-color: white;
   box-shadow: 1px 1px 4px 1px lightgray;
@@ -144,7 +178,6 @@ const Container = styled.div`
 
 const CardBox = styled.div`
   padding: 10px;
-
   & p {
     color: #a3a3a3;
     font-weight: bold;
@@ -159,12 +192,19 @@ const SearchCate = styled.span`
 `;
 
 const RecommendList = styled.ul`
+  padding: 0;
   & li {
     margin: 15px 0 15px 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 40px;
+    border-radius: 10px;
     cursor: pointer;
+    &:focus {
+      outline: none;
+      background-color: #cae9ff;
+    }
   }
   & img {
     margin-right: 7px;

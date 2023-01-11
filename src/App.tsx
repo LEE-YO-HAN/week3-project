@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { RecommendSearch } from "./components/RecommandSearch";
+import { FormEvent, KeyEvent } from "./components/type/type";
 
 function App() {
   const [isFocus, setIsFocus] = useState<boolean>(false);
@@ -17,7 +18,7 @@ function App() {
   let storageInit = localStorage.getItem("searched")?.split(",");
 
   const [localStorageData, setlocalStorageData] = useState<any>(storageInit);
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (searchWord !== "") {
       if (!localStorage.getItem("searched")) {
@@ -39,7 +40,7 @@ function App() {
 
   // search requset optimizaition
   const [keyInUse, setKeyInUse] = useState(false);
-  const keyCheck = (e: React.KeyboardEvent<HTMLInputElement>, type: string) => {
+  const keyCheck = (e: KeyEvent, type: string) => {
     if (type === "up") {
       if (e.code.indexOf("Key") === 0) {
         setTimeout(() => {
@@ -70,6 +71,7 @@ function App() {
               id="searchInput"
               type="text"
               autoComplete="off"
+              tabIndex={0}
               value={searchWord}
             />
             <SearchPlaceHolder
@@ -91,7 +93,7 @@ function App() {
               src={require("../src/images/cancel.png")}
               alt="검색 초기화"
             />
-            <SearchBtn>
+            <SearchBtn tabIndex={-1}>
               <img src={require("../src/images/searchWhite.png")} alt="검색" />
             </SearchBtn>
           </SearchArea>
@@ -119,7 +121,6 @@ const SearchBox = styled.div`
   width: 100vw;
   height: 450px;
   background-color: #cae9ff;
-
   & h2 {
     font-size: 2.2rem;
     text-align: center;
@@ -160,7 +161,6 @@ const SearchInput = styled.input`
 
 const SearchPlaceHolder = styled.div`
   position: absolute;
-
   display: flex;
   align-items: center;
   color: gray;
@@ -185,7 +185,6 @@ const SearchBtn = styled.button`
   border-radius: 50%;
   background-color: #007be9;
   cursor: pointer;
-
   & img {
     width: 30px;
     height: 30px;
