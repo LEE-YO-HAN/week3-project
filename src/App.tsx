@@ -1,9 +1,9 @@
 import { useState } from "react";
 import styled from "styled-components";
-import { RecommandSearch } from "./components/RecommandSearch";
+import { RecommendSearch } from "./components/RecommandSearch";
 
 function App() {
-  const [isFocus, setIsFocus] = useState<boolean>(true);
+  const [isFocus, setIsFocus] = useState<boolean>(false);
   const [searchWord, setSearchWord] = useState<string>("");
 
   const focusHandler = (type: string) => {
@@ -14,24 +14,42 @@ function App() {
     document.getElementById("searchInput")?.focus();
   };
 
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchWord !== "") {
+      if (!localStorage.getItem("searched")) {
+        localStorage.setItem("searched", searchWord);
+      } else {
+        let newStorage = `${localStorage.getItem(
+          "searched"
+        )},${searchWord}`.split(",");
+        let newStorageSet = newStorage.filter((item, index) => {
+          return newStorage.indexOf(item) === index;
+        });
+        localStorage.setItem("searched", `${newStorageSet}`);
+      }
+      setSearchWord("");
+    }
+  };
+
   return (
-    <SearchBox>
+    <SearchBox onClick={() => focusHandler("blur")}>
       <h2>
         국내 모든 임상시험 검색하고
         <br />
         온라인으로 참여하기
       </h2>
-      <InputWrap>
+      <InputWrap onClick={(e) => e.stopPropagation()}>
         <InputBox
           style={isFocus ? { border: "2px solid #007BE9" } : { border: "none" }}
         >
-          <SearchArea>
+          <SearchArea onSubmit={onSubmit}>
             <SearchInput
               onChange={(e) => setSearchWord(e.target.value)}
               onFocus={() => focusHandler("focus")}
-              onBlur={() => focusHandler("blur")}
               id="searchInput"
               type="text"
+              autoComplete="off"
               value={searchWord}
             />
             <SearchPlaceHolder
@@ -59,7 +77,12 @@ function App() {
           </SearchArea>
         </InputBox>
       </InputWrap>
-      <RecommandSearch isFocus={isFocus} searchWord={searchWord} />
+      <RecommendSearch
+        isFocus={isFocus}
+        searchWord={searchWord}
+        setSearchWord={setSearchWord}
+        focusHandler={focusHandler}
+      />
     </SearchBox>
   );
 }
@@ -95,7 +118,7 @@ const InputBox = styled.div`
   background-color: white;
 `;
 
-const SearchArea = styled.div`
+const SearchArea = styled.form`
   display: flex;
   align-items: center;
 `;
