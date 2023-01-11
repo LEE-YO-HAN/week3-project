@@ -39,12 +39,15 @@ function App() {
 
   // search requset optimizaition
   const [keyInUse, setKeyInUse] = useState(false);
-  const keyCheck = (type: string) => {
-    type === "up"
-      ? setTimeout(() => {
+  const keyCheck = (e: React.KeyboardEvent<HTMLInputElement>, type: string) => {
+    if (type === "up") {
+      if (e.code.indexOf("Key") === 0) {
+        setTimeout(() => {
           setKeyInUse(false);
-        }, 500)
-      : setKeyInUse(true);
+        }, 500);
+      }
+    }
+    setKeyInUse(true);
   };
 
   return (
@@ -62,8 +65,8 @@ function App() {
             <SearchInput
               onChange={(e) => setSearchWord(e.target.value)}
               onFocus={() => focusHandler("focus")}
-              onKeyUp={() => keyCheck("up")}
-              onKeyDown={() => keyCheck("down")}
+              onKeyUp={(e) => keyCheck(e, "up")}
+              onKeyDown={(e) => keyCheck(e, "down")}
               id="searchInput"
               type="text"
               autoComplete="off"

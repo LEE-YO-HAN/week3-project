@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { searchAPI } from "../api/api";
+import { RegExp } from "../util/RegExp";
 
 interface childProps {
   isFocus: boolean;
@@ -33,15 +34,12 @@ export const RecommendSearch = ({
     setCountAxios((prev) => prev + 1);
   };
 
-  let pattern = /([^가-힣a-z\x20])/i;
-  let blankPattern = /^\s+|\s+$/g;
-
   useEffect(() => {
     if (
       searchWord.length > 0 &&
-      !blankPattern.test(searchWord) && // not only blank
-      !pattern.test(searchWord) && // not each String
-      !keyInUse
+      !RegExp.blankPattern(searchWord) && // not only blank
+      !RegExp.pattern(searchWord) && // not each String
+      keyInUse === false
     ) {
       fetchSick(searchWord);
     }
