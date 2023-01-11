@@ -16,14 +16,18 @@ export const RecommendSearch = ({
   focusHandler,
 }: childProps) => {
   const [recommendWord, setRecommendWord] = useState<Array<any>>();
+  const [countAxios, setCountAxios] = useState(0);
+  console.info("axios#############", countAxios);
 
   const fetchSick = async () => {
     const data = await searchAPI.getSearch(searchWord).then((res) => {
       setRecommendWord(res.data);
+      // #######
+      setCountAxios((prev) => prev + 1);
     });
   };
   useEffect(() => {
-    fetchSick();
+    // fetchSick();
   }, [searchWord]);
 
   let storageData = localStorage.getItem("searched")?.split(",");
@@ -37,6 +41,7 @@ export const RecommendSearch = ({
 
   console.log(localData);
   console.log(localStorage.getItem("searched"));
+
   return (
     <>
       {isFocus ? (
@@ -64,7 +69,10 @@ export const RecommendSearch = ({
                         <span>{item}</span>
                       </ListItemWrap>
                       <CancelBtn
-                        onClick={() => deleteSearchedWord(item)}
+                        onClick={(e) => {
+                          deleteSearchedWord(item);
+                          e.stopPropagation();
+                        }}
                         src={require("../images/cancel.png")}
                         alt="최근 검색어 삭제"
                       />
