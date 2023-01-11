@@ -107,90 +107,87 @@ export const RecommendSearch = ({
     <>
       {isFocus ? (
         <Container onClick={(e) => e.stopPropagation()}>
-          <CardBox
-            style={
-              searchWord?.length !== 0
-                ? { display: "none" }
-                : { display: "block" }
-            }
-          >
-            <SearchCate>최근 검색어</SearchCate>
-            <RecommendList>
-              {localStorageData && localStorageData !== undefined ? (
-                localStorageData?.map((item: string, index: number) => {
-                  return (
-                    <li
-                      key={index}
-                      id={`searchList${index}`}
-                      tabIndex={0}
-                      onClick={() => {
-                        setSearchWord(item);
-                        focusHandler("blur");
-                      }}
-                      onKeyDown={(e) =>
-                        focusContralArrow(e, index, localStorageData?.length)
-                      }
-                      onFocus={() => setFocusItem(item)}
-                    >
-                      <ListItemWrap>
-                        <img src={require("../images/searchGray.png")} alt="" />
-                        <span>{item}</span>
-                      </ListItemWrap>
-                      <CancelBtn
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          deleteSearchedWord(item);
+          {searchWord?.length === 0 ? (
+            <CardBox>
+              <SearchCate>최근 검색어</SearchCate>
+              <RecommendList>
+                {localStorageData && localStorageData !== undefined ? (
+                  localStorageData?.map((item: string, index: number) => {
+                    return (
+                      <li
+                        key={index}
+                        id={`searchList${index}`}
+                        tabIndex={0}
+                        onClick={() => {
+                          setSearchWord(item);
+                          focusHandler("blur");
                         }}
-                        src={require("../images/cancel.png")}
-                        alt="최근 검색어 삭제"
-                      />
-                    </li>
-                  );
-                })
-              ) : (
-                <p>최근 검색어가 없습니다.</p>
-              )}
-            </RecommendList>
-          </CardBox>
-          <CardBox
-            style={
-              searchWord?.length > 0
-                ? { display: "block" }
-                : { display: "none" }
-            }
-          >
-            <SearchCate>추천 검색어</SearchCate>
-            <RecommendList>
-              {recommendWord?.length !== 0 ? (
-                recommendWord?.map((item, index) => {
-                  return (
-                    <li
-                      key={index}
-                      id={`searchList${index}`}
-                      tabIndex={0}
-                      onClick={() => {
-                        setSearchWord(item.sickNm);
-                        focusHandler("blur");
-                      }}
-                      onKeyDown={(e) =>
-                        focusContralArrow(e, index, recommendWord?.length)
-                      }
-                      onFocus={() => setFocusItem(item.sickNm)}
-                    >
-                      <ListItemWrap>
-                        <img src={require("../images/searchGray.png")} alt="" />
-                        {item.sickNm?.split(searchWord)[0]}
-                        <ItemBold>{searchWord}</ItemBold>
-                        {item.sickNm?.split(searchWord)[1]}
-                      </ListItemWrap>
-                    </li>
-                  );
-                })
-              ) : (
-                <p>추천 검색어가 없습니다.</p>
-              )}
-            </RecommendList>
-          </CardBox>
+                        onKeyDown={(e) =>
+                          focusContralArrow(e, index, localStorageData?.length)
+                        }
+                        onFocus={() => setFocusItem(item)}
+                      >
+                        <ListItemWrap>
+                          <img
+                            src={require("../images/searchGray.png")}
+                            alt=""
+                          />
+                          <span>{item}</span>
+                        </ListItemWrap>
+                        <CancelBtn
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteSearchedWord(item);
+                          }}
+                          src={require("../images/cancel.png")}
+                          alt="최근 검색어 삭제"
+                        />
+                      </li>
+                    );
+                  })
+                ) : (
+                  <p>최근 검색어가 없습니다.</p>
+                )}
+              </RecommendList>
+            </CardBox>
+          ) : (
+            <CardBox>
+              <SearchCate>추천 검색어</SearchCate>
+              <RecommendList>
+                {recommendWord?.length !== 0 ? (
+                  recommendWord?.map((item, index) => {
+                    return (
+                      <li
+                        key={index}
+                        id={`searchList${index}`}
+                        tabIndex={0}
+                        onClick={() => {
+                          setSearchWord(item.sickNm);
+                          focusHandler("blur");
+                        }}
+                        onKeyDown={(e) =>
+                          focusContralArrow(e, index, recommendWord?.length)
+                        }
+                        onFocus={() => setFocusItem(item.sickNm)}
+                      >
+                        <ListItemWrap>
+                          <img
+                            src={require("../images/searchGray.png")}
+                            alt=""
+                          />
+                          {item.sickNm?.split(searchWord)[0]}
+                          <ItemBold>{searchWord}</ItemBold>
+                          {item.sickNm?.split(searchWord)[1]}
+                        </ListItemWrap>
+                      </li>
+                    );
+                  })
+                ) : (
+                  <p>추천 검색어가 없습니다.</p>
+                )}
+              </RecommendList>
+            </CardBox>
+          )}
         </Container>
       ) : null}
     </>

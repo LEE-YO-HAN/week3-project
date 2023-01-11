@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
-import { RecommendSearch } from "./components/RecommandSearch";
+import { RecommendSearch } from "./components/RecommendSearch";
 import { FormEvent, KeyEvent } from "./components/type/type";
 
 function App() {
