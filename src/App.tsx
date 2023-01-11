@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { RecommendSearch } from "./components/RecommandSearch";
+import { Console } from "console";
 
 function App() {
   const [isFocus, setIsFocus] = useState<boolean>(false);
@@ -15,7 +16,6 @@ function App() {
   };
 
   let storageInit = localStorage.getItem("searched")?.split(",");
-  console.log(storageInit);
 
   const [localStorageData, setlocalStorageData] = useState<any>(storageInit);
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -51,7 +51,10 @@ function App() {
         >
           <SearchArea onSubmit={onSubmit}>
             <SearchInput
-              onChange={(e) => setSearchWord(e.target.value)}
+              onChange={(e) => {
+                setSearchWord(e.target.value);
+                console.log(e);
+              }}
               onFocus={() => focusHandler("focus")}
               id="searchInput"
               type="text"

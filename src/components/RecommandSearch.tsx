@@ -19,19 +19,27 @@ export const RecommendSearch = ({
   localStorageData,
   setlocalStorageData,
 }: childProps) => {
-  const [recommendWord, setRecommendWord] = useState<Array<any>>();
+  const [recommendWord, setRecommendWord] = useState<Array<any>>([""]);
   const [countAxios, setCountAxios] = useState(0);
   console.info("axios#############", countAxios);
 
-  const fetchSick = async () => {
-    const data = await searchAPI.getSearch(searchWord).then((res) => {
-      setRecommendWord(res.data);
-      // #######
-      setCountAxios((prev) => prev + 1);
-    });
+  const fetchSick = async (param: string) => {
+    console.log("패치 시작@@@@@@@@@@@@@@@@@@@@@@@");
+    const { data } = await searchAPI.getSearch(param);
+    console.log("axios내부데이터", data);
+    setRecommendWord(data);
+    setCountAxios((prev) => prev + 1);
   };
+  console.log(searchWord);
+  console.log(searchWord.length);
+  console.log("뽑은 데이터", recommendWord);
+
+  let pattern = /([^가-힣a-z\x20])/i;
+
   useEffect(() => {
-    // fetchSick();
+    if (searchWord.length > 0 && pattern.test(searchWord)) {
+      fetchSick(searchWord);
+    }
   }, [searchWord]);
 
   const deleteSearchedWord = (value: string) => {
@@ -39,9 +47,6 @@ export const RecommendSearch = ({
     localStorage.setItem("searched", `${newLocalData}`);
     setlocalStorageData(newLocalData);
   };
-
-  console.log(localStorage.getItem("searched"));
-  console.log("props", localStorageData);
 
   return (
     <>
@@ -93,7 +98,7 @@ export const RecommendSearch = ({
           >
             <SearchCate>추천 검색어</SearchCate>
             <RecommendList>
-              {searchWord.length > 0 && recommendWord !== undefined ? (
+              {recommendWord?.length !== 0 ? (
                 recommendWord?.map((item, index) => {
                   return (
                     <li
