@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { useState } from "react";
 import { RecommendSearch } from "./components/RecommandSearch";
-import { Console } from "console";
 
 function App() {
   const [isFocus, setIsFocus] = useState<boolean>(false);
@@ -38,6 +37,16 @@ function App() {
     }
   };
 
+  // search requset optimizaition
+  const [keyInUse, setKeyInUse] = useState(false);
+  const keyCheck = (type: string) => {
+    type === "up"
+      ? setTimeout(() => {
+          setKeyInUse(false);
+        }, 500)
+      : setKeyInUse(true);
+  };
+
   return (
     <SearchBox onClick={() => focusHandler("blur")}>
       <h2>
@@ -51,11 +60,10 @@ function App() {
         >
           <SearchArea onSubmit={onSubmit}>
             <SearchInput
-              onChange={(e) => {
-                setSearchWord(e.target.value);
-                console.log(e);
-              }}
+              onChange={(e) => setSearchWord(e.target.value)}
               onFocus={() => focusHandler("focus")}
+              onKeyUp={() => keyCheck("up")}
+              onKeyDown={() => keyCheck("down")}
               id="searchInput"
               type="text"
               autoComplete="off"
@@ -93,6 +101,7 @@ function App() {
         focusHandler={focusHandler}
         localStorageData={localStorageData}
         setlocalStorageData={setlocalStorageData}
+        keyInUse={keyInUse}
       />
     </SearchBox>
   );

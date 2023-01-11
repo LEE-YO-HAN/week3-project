@@ -9,6 +9,7 @@ interface childProps {
   focusHandler: (type: string) => void;
   localStorageData: any;
   setlocalStorageData: React.Dispatch<any>;
+  keyInUse: boolean;
 }
 
 export const RecommendSearch = ({
@@ -18,6 +19,7 @@ export const RecommendSearch = ({
   focusHandler,
   localStorageData,
   setlocalStorageData,
+  keyInUse,
 }: childProps) => {
   const [recommendWord, setRecommendWord] = useState<Array<any>>([""]);
   const [countAxios, setCountAxios] = useState(0);
@@ -30,23 +32,30 @@ export const RecommendSearch = ({
     setRecommendWord(data);
     setCountAxios((prev) => prev + 1);
   };
-  console.log(searchWord);
-  console.log(searchWord.length);
-  console.log("뽑은 데이터", recommendWord);
 
   let pattern = /([^가-힣a-z\x20])/i;
+  let blankPattern = /^\s+|\s+$/g;
 
   useEffect(() => {
-    if (searchWord.length > 0 && pattern.test(searchWord)) {
+    if (
+      searchWord.length > 0 &&
+      !blankPattern.test(searchWord) && // not only blank
+      !pattern.test(searchWord) && // not each String
+      !keyInUse
+    ) {
       fetchSick(searchWord);
     }
-  }, [searchWord]);
+  }, [searchWord, keyInUse]);
 
   const deleteSearchedWord = (value: string) => {
     let newLocalData = localStorageData?.filter((item: any) => item !== value);
     localStorage.setItem("searched", `${newLocalData}`);
     setlocalStorageData(newLocalData);
   };
+
+  let boldWord = `
+  <ItemBold>${searchWord}</ItemBold>
+  `;
 
   return (
     <>
@@ -110,7 +119,9 @@ export const RecommendSearch = ({
                     >
                       <ListItemWrap>
                         <img src={require("../images/searchGray.png")} alt="" />
-                        {item.sickNm}
+                        {item.sickNm.split(searchWord)[0]}
+                        <ItemBold>{searchWord}</ItemBold>
+                        {item.sickNm.split(searchWord)[1]}
                       </ListItemWrap>
                     </li>
                   );
