@@ -14,11 +14,16 @@ function App() {
     document.getElementById("searchInput")?.focus();
   };
 
+  let storageInit = localStorage.getItem("searched")?.split(",");
+  console.log(storageInit);
+
+  const [localStorageData, setlocalStorageData] = useState<any>(storageInit);
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchWord !== "") {
       if (!localStorage.getItem("searched")) {
         localStorage.setItem("searched", searchWord);
+        setlocalStorageData([searchWord]);
       } else {
         let newStorage = `${localStorage.getItem(
           "searched"
@@ -27,6 +32,7 @@ function App() {
           return newStorage.indexOf(item) === index;
         });
         localStorage.setItem("searched", `${newStorageSet}`);
+        setlocalStorageData(newStorageSet);
       }
       setSearchWord("");
     }
@@ -82,6 +88,8 @@ function App() {
         searchWord={searchWord}
         setSearchWord={setSearchWord}
         focusHandler={focusHandler}
+        localStorageData={localStorageData}
+        setlocalStorageData={setlocalStorageData}
       />
     </SearchBox>
   );

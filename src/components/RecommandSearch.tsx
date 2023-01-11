@@ -7,6 +7,8 @@ interface childProps {
   searchWord: string;
   setSearchWord: React.Dispatch<React.SetStateAction<string>>;
   focusHandler: (type: string) => void;
+  localStorageData: any;
+  setlocalStorageData: React.Dispatch<any>;
 }
 
 export const RecommendSearch = ({
@@ -14,6 +16,8 @@ export const RecommendSearch = ({
   searchWord,
   setSearchWord,
   focusHandler,
+  localStorageData,
+  setlocalStorageData,
 }: childProps) => {
   const [recommendWord, setRecommendWord] = useState<Array<any>>();
   const [countAxios, setCountAxios] = useState(0);
@@ -33,14 +37,20 @@ export const RecommendSearch = ({
   let storageData = localStorage.getItem("searched")?.split(",");
   const [localData, setLocalData] = useState(storageData);
 
+  // const deleteSearchedWord = (value: string) => {
+  //   let newLocalData = localData?.filter((item) => item !== value);
+  //   localStorage.setItem("searched", `${newLocalData}`);
+  //   setLocalData(newLocalData);
+  // };
   const deleteSearchedWord = (value: string) => {
-    let newLocalData = localData?.filter((item) => item !== value);
+    let newLocalData = localStorageData?.filter((item: any) => item !== value);
     localStorage.setItem("searched", `${newLocalData}`);
-    setLocalData(newLocalData);
+    setlocalStorageData(newLocalData);
   };
 
   console.log(localData);
   console.log(localStorage.getItem("searched"));
+  console.log("props", localStorageData);
 
   return (
     <>
@@ -55,10 +65,11 @@ export const RecommendSearch = ({
           >
             <SearchCate>최근 검색어</SearchCate>
             <RecommendList>
-              {localData && localData[0] !== "" ? (
-                localData?.map((item) => {
+              {localStorageData && localStorageData !== undefined ? (
+                localStorageData?.map((item: any, index: number) => {
                   return (
                     <li
+                      key={index}
                       onClick={() => {
                         setSearchWord(item);
                         focusHandler("blur");
@@ -92,9 +103,10 @@ export const RecommendSearch = ({
             <SearchCate>추천 검색어</SearchCate>
             <RecommendList>
               {searchWord.length > 0 && recommendWord !== undefined ? (
-                recommendWord?.map((item) => {
+                recommendWord?.map((item, index) => {
                   return (
                     <li
+                      key={index}
                       onClick={() => {
                         setSearchWord(item.sickNm);
                         focusHandler("blur");
