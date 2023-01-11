@@ -34,21 +34,12 @@ export const RecommendSearch = ({
     // fetchSick();
   }, [searchWord]);
 
-  let storageData = localStorage.getItem("searched")?.split(",");
-  const [localData, setLocalData] = useState(storageData);
-
-  // const deleteSearchedWord = (value: string) => {
-  //   let newLocalData = localData?.filter((item) => item !== value);
-  //   localStorage.setItem("searched", `${newLocalData}`);
-  //   setLocalData(newLocalData);
-  // };
   const deleteSearchedWord = (value: string) => {
     let newLocalData = localStorageData?.filter((item: any) => item !== value);
     localStorage.setItem("searched", `${newLocalData}`);
     setlocalStorageData(newLocalData);
   };
 
-  console.log(localData);
   console.log(localStorage.getItem("searched"));
   console.log("props", localStorageData);
 
