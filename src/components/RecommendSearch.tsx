@@ -28,7 +28,7 @@ export const RecommendSearch = ({
   // 과제 요구사항 콘솔
   console.info("axios#############", countAxios);
 
-  // valid && fetch
+  // valid && fetch && caching
   const fetchSick = async (param: string) => {
     const BASE_URL = process.env.REACT_APP_BASE_SEARCH_URL;
     const cacheStorage = await caches.open("search");
@@ -36,12 +36,12 @@ export const RecommendSearch = ({
     try {
       if (responsedCache) {
         responsedCache.json().then((res) => {
-          console.log(res);
           setRecommendWord(res);
         });
       } else {
-        const res = await fetch(`${BASE_URL}${param}`);
-        await cacheStorage.put(`${BASE_URL}${param}`, res);
+        const response2 = await fetch(`${BASE_URL}${param}`);
+        await cacheStorage.put(`${BASE_URL}${param}`, response2);
+        fetchSick(param);
         setCountAxios((prev) => prev + 1);
       }
     } catch (error) {
