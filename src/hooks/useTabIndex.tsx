@@ -1,11 +1,12 @@
 import { KeyLIEvent } from "../components/type/type";
+import { setStateString } from "../components/type/type";
 
 export const useTabIndex = () => {
   // tabIndex logic
   const focusListSearch = (
     e: KeyboardEvent,
     focusItem: string,
-    setSearchWord: React.Dispatch<React.SetStateAction<string>>
+    setSearchWord: setStateString
   ) => {
     if (e.code === "Enter") {
       setSearchWord(focusItem);

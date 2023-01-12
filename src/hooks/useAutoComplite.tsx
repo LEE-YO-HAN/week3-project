@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { setlocalStorageData } from "../components/type/type";
 
 export const useAutoComplite = () => {
   const [recommendWord, setRecommendWord] = useState<Array<any>>([]);
@@ -26,10 +27,10 @@ export const useAutoComplite = () => {
 
   const deleteSearchedWord = (
     value: string,
-    localStorageData: any,
-    setlocalStorageData: React.Dispatch<any>
+    localStorageData: string[] | undefined,
+    setlocalStorageData: setlocalStorageData
   ) => {
-    let newLocalData = localStorageData?.filter((item: any) => item !== value);
+    let newLocalData = localStorageData?.filter((item) => item !== value);
     localStorage.setItem("searched", `${newLocalData}`);
     setlocalStorageData(newLocalData);
   };

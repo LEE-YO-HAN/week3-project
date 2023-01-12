@@ -15,7 +15,9 @@ export default function useSearch() {
 
   let storageInit = localStorage.getItem("searched")?.split(",");
 
-  const [localStorageData, setlocalStorageData] = useState<any>(storageInit);
+  const [localStorageData, setlocalStorageData] = useState<
+    string[] | undefined
+  >(storageInit);
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (searchWord !== "") {
