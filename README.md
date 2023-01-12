@@ -8,14 +8,10 @@
 
 </br></br>
 
-## 목차
-
 1. [Local Start](#local-start)
 2. [구현사항](#구현사항)
-3. [구현방법](#구현-방법)
-4. [Local Start](#local-start)
 
-</br></br>
+</br>
 
 ### Local Start
 
