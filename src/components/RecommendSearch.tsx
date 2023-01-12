@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { RegExp } from "../util/RegExp";
 import { KeyLIEvent } from "./type/type";
 import { useAutoComplite } from "../hooks/useAutoComplite";
+import { useTabIndex } from "../hooks/useTabIndex";
 
 interface childProps {
   isFocus: boolean;
@@ -23,29 +24,6 @@ export const RecommendSearch = ({
   setlocalStorageData,
   keyInUse,
 }: childProps) => {
-  // const [recommendWord, setRecommendWord] = useState<Array<any>>([]);
-
-  // // valid && fetch && caching
-  // const fetchSick = async (param: string) => {
-  //   const BASE_URL = process.env.REACT_APP_BASE_SEARCH_URL;
-  //   const cacheStorage = await caches.open("search");
-  //   const responsedCache = await cacheStorage.match(`${BASE_URL}${param}`);
-  //   try {
-  //     if (responsedCache) {
-  //       responsedCache.json().then((res) => {
-  //         setRecommendWord(res);
-  //       });
-  //     } else {
-  //       const response2 = await fetch(`${BASE_URL}${param}`);
-  //       await cacheStorage.put(`${BASE_URL}${param}`, response2);
-  //       fetchSick(param);
-  //       console.info("calling api");
-  //     }
-  //   } catch (error) {
-  //     alert(error);
-  //   }
-  // };
-
   const {
     recommendWord,
     setRecommendWord,
@@ -73,49 +51,17 @@ export const RecommendSearch = ({
     if (searchWord?.length === 0) setRecommendWord([]);
   }, [searchWord, keyInUse]);
 
-  // tabIndex logic
-  const focusListSearch = (e: KeyboardEvent, focusItem: string) => {
-    if (e.code === "Enter") {
-      setSearchWord(focusItem);
-      let searchListId = document.getElementById("#searchList");
-      searchListId?.blur();
-      let searchInputId = document.getElementById("searchInput");
-      searchInputId?.focus();
-    }
-  };
-
+  const { focusContralArrow, focusListSearch } = useTabIndex();
   useEffect(() => {
     document.addEventListener("keydown", (e: KeyboardEvent) =>
-      focusListSearch(e, focusItem)
+      focusListSearch(e, focusItem, setSearchWord)
     );
     return () => {
       document.removeEventListener("keydown", (e: KeyboardEvent) =>
-        focusListSearch(e, focusItem)
+        focusListSearch(e, focusItem, setSearchWord)
       );
     };
   }, [focusItem]);
-
-  // tabIndex ArrowKey contral
-  const focusContralArrow = (
-    e: KeyLIEvent,
-    index: number,
-    listLength: number
-  ) => {
-    document.getElementById(`searchList${index}`)?.blur();
-    if (e.code === "ArrowDown") {
-      if (index === listLength - 1) {
-        document.getElementById(`searchList${0}`)?.focus();
-      } else {
-        document.getElementById(`searchList${index + 1}`)?.focus();
-      }
-    } else if (e.code === "ArrowUp") {
-      if (index === 0) {
-        document.getElementById(`searchList${listLength - 1}`)?.focus();
-      } else {
-        document.getElementById(`searchList${index - 1}`)?.focus();
-      }
-    }
-  };
 
   return (
     <>
