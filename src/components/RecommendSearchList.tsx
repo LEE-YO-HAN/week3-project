@@ -140,9 +140,3 @@ const ListItemWrap = styled.div`
 const ItemBold = styled.span`
   font-weight: bold;
 `;
-const CancelBtn = styled.img`
-  width: 18px;
-  height: 18px;
-  margin-right: 10px;
-  cursor: pointer;
-`;

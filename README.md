@@ -8,6 +8,8 @@
 
 </br></br>
 
+## 기능 상세 정리 : https://github.com/LEE-YO-HAN/week3-project/wiki
+
 1. [Local Start](#local-start)
 2. [구현사항](#구현사항)
 
