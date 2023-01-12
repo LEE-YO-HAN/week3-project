@@ -1,46 +1,76 @@
-# Getting Started with Create React App
+# 검색창/검색어 추천 기능 구현 - 원티드 프리온보딩 3주차
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 배포주소 :
 
-## Available Scripts
+</br>
 
-In the project directory, you can run:
+## json-server 배포 레포 :
 
-### `yarn start`
+</br></br>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 목차
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+1. [Local Start](#local-start)
+2. [구현사항](#구현사항)
+3. [구현방법](#구현-방법)
+4. [Local Start](#local-start)
 
-### `yarn test`
+</br></br>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Local Start
 
-### `yarn build`
+<br>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+# yarn
+yarn install
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# local DB
+yarn json-server --watch db.json --port 3001
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+# start project
+yarn start
+```
 
-### `yarn eject`
+<h3 align="center">🛠Used Tools🛠</h3>
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+<div align="center" >
+    <img src="https://img.shields.io/badge/React-61DAFB?style=flat&logo=React&logoColor=white"/>
+    <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=TypeScript&logoColor=white"/>
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+</div>
+<div align="center">
+    <img src="https://img.shields.io/badge/styled-components-DB7093?style=flat&logo=styled-components&logoColor=white"/>
+    <img src="https://img.shields.io/badge/JsonServer-000000?style=flat&logo=JSON&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Vercel-000000?style=flat&logo=Vercel&logoColor=white"/>
+</div>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+<br>
+<br>
+<br>
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### 구현사항
 
-## Learn More
+1. 질환명 검색시 API 호출을 통해 검색어 추천 기능 구현
+   - 사용자가 입력한 텍스트와 일치하는 부분은 bold 처리
+   - localStorage를 이용해 최근 검색어 노출
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+</br>
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+2. API 호출 최적화
+   - keyUp/keyDown event를 통해 사용자의 키 입력이 끝나고 일정 시간 지연시간을 준 뒤, API 호출을 통해 해당하는 값에 대한 요청값 반환
+   - 띄어쓰기만 있는 string, 완성되지 않은 문자(자음 모음 분리)의 경우 API 호출을 하지 않는 등의 호출 조건 추가
+   - CacheStorage를 이용해 동일한 요청의 값은 캐시를 통해 반환
+
+</br>
+
+3. 키보드만으로도 추천/최근 검색어로 이동 가능
+   - tab키 or 화살표 방향키 상하 조작으로 이동 가능
+   - 추천 검색어로 키보드 이동 후 Enter 입력 시 submit => 최근 검색어 localStorage로 저장
+   - 추천 검색어 마우스 클릭 시, 해당 키워드를 input의 value로 이동
+
+</br></br>
