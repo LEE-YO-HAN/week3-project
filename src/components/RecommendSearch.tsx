@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { searchAPI } from "../api/api";
 import { RegExp } from "../util/RegExp";
 import { KeyLIEvent } from "./type/type";
 
@@ -31,10 +30,23 @@ export const RecommendSearch = ({
 
   // valid && fetch
   const fetchSick = async (param: string) => {
-    const { data } = await searchAPI.getSearch(param);
-    setRecommendWord(data);
-    // 과제 요구사항용 state
-    setCountAxios((prev) => prev + 1);
+    const BASE_URL = process.env.REACT_APP_BASE_SEARCH_URL;
+    const cacheStorage = await caches.open("search");
+    const responsedCache = await cacheStorage.match(`${BASE_URL}${param}`);
+    try {
+      if (responsedCache) {
+        responsedCache.json().then((res) => {
+          console.log(res);
+          setRecommendWord(res);
+        });
+      } else {
+        const res = await fetch(`${BASE_URL}${param}`);
+        await cacheStorage.put(`${BASE_URL}${param}`, res);
+        setCountAxios((prev) => prev + 1);
+      }
+    } catch (error) {
+      alert(error);
+    }
   };
 
   useEffect(() => {
