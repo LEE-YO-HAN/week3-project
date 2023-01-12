@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { RegExp } from "../util/RegExp";
 import { KeyLIEvent } from "./type/type";
+import { useAutoComplite } from "../hooks/useAutoComplite";
 
 interface childProps {
   isFocus: boolean;
@@ -22,32 +23,37 @@ export const RecommendSearch = ({
   setlocalStorageData,
   keyInUse,
 }: childProps) => {
-  const [recommendWord, setRecommendWord] = useState<Array<any>>([]);
-  const [countAxios, setCountAxios] = useState<number>(0);
+  // const [recommendWord, setRecommendWord] = useState<Array<any>>([]);
 
-  // 과제 요구사항 콘솔
-  console.info("axios#############", countAxios);
+  // // valid && fetch && caching
+  // const fetchSick = async (param: string) => {
+  //   const BASE_URL = process.env.REACT_APP_BASE_SEARCH_URL;
+  //   const cacheStorage = await caches.open("search");
+  //   const responsedCache = await cacheStorage.match(`${BASE_URL}${param}`);
+  //   try {
+  //     if (responsedCache) {
+  //       responsedCache.json().then((res) => {
+  //         setRecommendWord(res);
+  //       });
+  //     } else {
+  //       const response2 = await fetch(`${BASE_URL}${param}`);
+  //       await cacheStorage.put(`${BASE_URL}${param}`, response2);
+  //       fetchSick(param);
+  //       console.info("calling api");
+  //     }
+  //   } catch (error) {
+  //     alert(error);
+  //   }
+  // };
 
-  // valid && fetch && caching
-  const fetchSick = async (param: string) => {
-    const BASE_URL = process.env.REACT_APP_BASE_SEARCH_URL;
-    const cacheStorage = await caches.open("search");
-    const responsedCache = await cacheStorage.match(`${BASE_URL}${param}`);
-    try {
-      if (responsedCache) {
-        responsedCache.json().then((res) => {
-          setRecommendWord(res);
-        });
-      } else {
-        const response2 = await fetch(`${BASE_URL}${param}`);
-        await cacheStorage.put(`${BASE_URL}${param}`, response2);
-        fetchSick(param);
-        setCountAxios((prev) => prev + 1);
-      }
-    } catch (error) {
-      alert(error);
-    }
-  };
+  const {
+    recommendWord,
+    setRecommendWord,
+    fetchSick,
+    focusItem,
+    setFocusItem,
+    deleteSearchedWord,
+  } = useAutoComplite();
 
   useEffect(() => {
     if (
@@ -67,17 +73,7 @@ export const RecommendSearch = ({
     if (searchWord?.length === 0) setRecommendWord([]);
   }, [searchWord, keyInUse]);
 
-  // delete recent list
-  const deleteSearchedWord = (value: string) => {
-    let newLocalData = localStorageData?.filter((item: any) => item !== value);
-    localStorage.setItem("searched", `${newLocalData}`);
-    setlocalStorageData(newLocalData);
-  };
-
   // tabIndex logic
-  const [focusItem, setFocusItem] = useState<string>("");
-  console.log(focusItem);
-
   const focusListSearch = (e: KeyboardEvent, focusItem: string) => {
     if (e.code === "Enter") {
       setSearchWord(focusItem);
@@ -155,7 +151,11 @@ export const RecommendSearch = ({
                         <CancelBtn
                           onClick={(e) => {
                             e.stopPropagation();
-                            deleteSearchedWord(item);
+                            deleteSearchedWord(
+                              item,
+                              localStorageData,
+                              setlocalStorageData
+                            );
                           }}
                           src={require("../images/cancel.png")}
                           alt="최근 검색어 삭제"
