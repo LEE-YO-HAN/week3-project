@@ -53,7 +53,8 @@ yarn start
 
 1. 질환명 검색시 API 호출을 통해 검색어 추천 기능 구현
    - 사용자가 입력한 텍스트와 일치하는 부분은 bold 처리
-   - localStorage를 이용해 최근 검색어 노출
+   - input focus시 localStorage를 이용해 최근 검색어 노출
+   - 일치하는 검색 결과가 없는 경우의 UI 표시
 
 </br>
 

@@ -53,10 +53,16 @@ export const RecommendSearch = ({
     if (
       searchWord?.length > 0 &&
       !RegExp.blankPattern(searchWord) && // not only blank
-      !RegExp.pattern(searchWord) && // not each String
       keyInUse === false
     ) {
-      fetchSick(searchWord);
+      if (
+        searchWord?.length <= 1 &&
+        RegExp.pattern(searchWord) // not each String
+      ) {
+        return;
+      } else {
+        fetchSick(searchWord);
+      }
     }
     if (searchWord?.length === 0) setRecommendWord([]);
   }, [searchWord, keyInUse]);
@@ -187,9 +193,11 @@ export const RecommendSearch = ({
                             src={require("../images/searchGray.png")}
                             alt="돋보기 이미지"
                           />
-                          {item.sickNm?.split(searchWord)[0]}
-                          <ItemBold>{searchWord}</ItemBold>
-                          {item.sickNm?.split(searchWord)[1]}
+                          <span>
+                            {item.sickNm?.split(searchWord)[0]}
+                            <ItemBold>{searchWord}</ItemBold>
+                            {item.sickNm?.split(searchWord)[1]}
+                          </span>
                         </ListItemWrap>
                       </li>
                     );
@@ -210,6 +218,8 @@ const Container = styled.div`
   position: absolute;
   top: 350px;
   width: 490px;
+  max-height: 500px;
+  overflow-y: auto;
   background-color: white;
   box-shadow: 1px 1px 4px 1px lightgray;
   border-radius: 20px;
